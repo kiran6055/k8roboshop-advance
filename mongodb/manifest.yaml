@@ -43,12 +43,15 @@ spec:
         volumeMounts:
         - name: mongodb-volume
           mountPath: /data
-  volumeClaimTemplates:
-  - metadata:
-      name: mongodb-volume
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "ebs-sc"
-      resources:
-        requests:
-          storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-volume
+spec:
+  storageClassName: ebs-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi  # Set the desired storage size
