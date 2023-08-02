@@ -57,6 +57,7 @@ spec:
       containers:
         - name: mysql
           image: kiranprav/mysql:v1
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: mysql-config
