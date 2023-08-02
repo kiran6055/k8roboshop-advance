@@ -4,15 +4,14 @@ metadata:
   name: mongodb
   namespace: roboshop
   labels:
-    name: mongodb # has to match .spec.selector.matchLabels
-    tier: db
+    app: mongodb
 spec:
   ports:
   - port: 27017
     name: mongodb
-  clusterIP: None # this is called as headless service
+  clusterIP: None #headless service
   selector:
-    name: mongodb # has to match .spec.selector.matchLabels
+    name: mongodb
     tier: db
 ---
 apiVersion: apps/v1
@@ -23,19 +22,21 @@ metadata:
 spec:
   selector:
     matchLabels:
-      name: mongodb # has to match .spec.selector.matchLabels
-      tier: db # has to match .spec.template.metadata.labels
+      name: mongodb # has to match .spec.template.metadata.labels
+      tier: db
   serviceName: "mongodb"
+  replicas: 3 # by default is 1
   replicas: 1 # by default is 1
+  minReadySeconds: 10 # by default is 0
   template:
     metadata:
       labels:
-        name: mongodb # has to match .spec.selector.matchLabels
+        name: mongodb # has to match .spec.template.metadata.labels
         tier: db
     spec:
+      terminationGracePeriodSeconds: 10
       containers:
-      - name: mogndb
-        imagePullPolicy: Always
+      - name: mongodb
         image: kiranprav/mongo:v1
         ports:
         - containerPort: 27017
@@ -52,5 +53,3 @@ spec:
       resources:
         requests:
           storage: 1Gi
-
-
