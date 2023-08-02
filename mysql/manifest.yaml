@@ -23,10 +23,8 @@ kind: Service
 metadata:
   name: mysql
   namespace: roboshop
-  labels:
-    app: mysql
 spec:
-  clusterIP: None # headless service
+  clusterIP: None
   selector:
     name: mysql
     tier: db
@@ -55,26 +53,29 @@ spec:
         tier: db
     spec:
       containers:
-        - name: mysql
-          image: techworldwithsiva/mysql:k8
-          imagePullPolicy: Always
-          envFrom:
-            - configMapRef:
-                name: mysql-config
-            - secretRef:
-                name: mysql-secret
-          ports:
-            - containerPort: 3306
-              name: mysql
-          volumeMounts:
-            - name: mysql-volume
-              mountPath: /var/lib/mysql
+      - name: mysql
+        image: techworldwithsiva/mysql:k8
+        imagePullPolicy: Always
+        args:
+        - "--ignore-db-dir=lost+found"
+        envFrom:
+        - configMapRef:
+            name: mysql-config
+        - secretRef:
+            name: mysql-secret
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-volume
+          mountPath: /var/lib/mysql
+        
   volumeClaimTemplates:
-    - metadata:
-        name: mysql-volume
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        storageClassName: "ebs-sc"
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: mysql-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "ebs-sc"
+      resources:
+        requests:
+          storage: 1Gi
