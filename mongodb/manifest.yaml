@@ -1,3 +1,4 @@
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,34 +26,28 @@ spec:
       name: mongodb # has to match .spec.template.metadata.labels
       tier: db
   serviceName: "mongodb"
-  replicas: 3 # by default is 1
-  minReadySeconds: 10 # by default is 0
+  replicas: 1 # by default is 1
   template:
     metadata:
       labels:
         name: mongodb # has to match .spec.template.metadata.labels
         tier: db
     spec:
-      terminationGracePeriodSeconds: 10
       containers:
       - name: mongodb
-        image: kiranprav/mongo:v1
+        image: techworldwithsiva/mongodb:v1
         ports:
         - containerPort: 27017
           name: mongodb
         volumeMounts:
         - name: mongodb-volume
-          mountPath: /data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: mongodb-volume
-  namespace: roboshop
-spec:
-  storageClassName: ebs-sc
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 4Gi  # Set the desired storage size
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "ebs-sc"
+      resources:
+        requests:
+          storage: 1Gi
