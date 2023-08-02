@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalogue-config
+  namespace: roboshop
+data:
+  MONGO_URL: "mongodb://mongodb:80/catalogue"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue-deployment
+  namespace: roboshop
+  labels:
+    tier: app
+    name: catalogue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: app
+      name: catalogue
+  template:
+    metadata:
+      labels:
+        tier: app
+        name: catalogue
+    spec:
+      containers:
+      - name: catalogue
+        imagePullPolicy: Always
+        image: kiranprav/catalogue:v2
+        envFrom:
+        - configMapRef:
+            name: catalogue-config
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue
+  namespace: roboshop
+spec:
+  selector:
+    tier: app
+    name: catalogue
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
