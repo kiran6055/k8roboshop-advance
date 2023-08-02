@@ -12,10 +12,10 @@ spec:
     name: mysql
     tier: db
   ports:
-  - protocol: TCP
-    ports: 3306
-    targetPort: 3306
-    name: mysql
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+      name: mysql
     
 ---
 apiVersion: v1
