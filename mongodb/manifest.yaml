@@ -26,15 +26,13 @@ spec:
       name: mongodb # has to match .spec.selector.matchLabels
       tier: db # has to match .spec.template.metadata.labels
   serviceName: "mongodb"
-  replicas: 2 # by default is 1
-  minReadySeconds: 5 # by default is 0
+  replicas: 1 # by default is 1
   template:
     metadata:
       labels:
         name: mongodb # has to match .spec.selector.matchLabels
         tier: db
     spec:
-      terminationGracePeriodSeconds: 5
       containers:
       - name: mogndb
         imagePullPolicy: Always
