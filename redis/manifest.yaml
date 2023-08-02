@@ -7,13 +7,15 @@ metadata:
   labels:
     app: redis
 spec:
-  ports:
-  - port: 6379
-    name: redis
   clusterIP: None #headless service
   selector:
     name: redis
     tier: db
+  ports:
+  - protocol: TCP
+    ports: 6379
+    targetPort: 6379
+    name: redis
 ---
 apiVersion: apps/v1
 kind: StatefulSet

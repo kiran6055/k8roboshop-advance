@@ -1,0 +1,72 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: roboshop
+  labels:
+    app: mysql
+spec:
+  clusterIP: None #headless service
+  selector:
+    name: mysql
+    tier: db
+  ports:
+  - protocol: TCP
+    ports: 3306
+    targetPort: 3306
+    name: mysql
+    
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: roboshop
+type: Opaque
+data:
+  MYSQL_USER: c2hpcHBpbmc=
+  MYSQL_PASSWORD: c2VjcmV0
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: roboshop
+spec:
+  selector:
+    matchLabels:
+      name: mysql # has to match .spec.template.metadata.labels
+      tier: db
+  serviceName: "mysql"
+  replicas: 1 # by default is 1
+  template:
+    metadata:
+      labels:
+        name: mysql # has to match .spec.template.metadata.labels
+        tier: db
+    spec:
+      containers:
+      - name: mysql
+        image: kiranprav/mysql:v1
+        envFrom:
+        - configMapRef:
+            name: mysql-config
+        - secretRef:
+            name: mysql-secret
+    ports:
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-volume
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "ebs-sc"
+      resources:
+        requests:
+          storage: 1Gi
