@@ -31,7 +31,7 @@ spec:
       containers:
       - name: catalogue
         imagePullPolicy: Always
-        image: kiranprav/catalogue:v2
+        image: kiranprav/catalogue:v1
         envFrom:
         - configMapRef:
             name: catalogue-config
