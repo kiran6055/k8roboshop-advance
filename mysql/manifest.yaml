@@ -58,6 +58,8 @@ spec:
         - name: mysql
           image: kiranprav/mysql:v1
           imagePullPolicy: Always
+          args:
+          - "--ignore-db-dir=lost+found"
           envFrom:
             - configMapRef:
                 name: mysql-config
