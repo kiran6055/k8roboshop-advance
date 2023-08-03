@@ -59,7 +59,7 @@ spec:
           image: kiranprav/mysql:v1
           imagePullPolicy: Always
           args:
-          - "--ignore-db-dir=lost+found"
+          - "--ignore-db-dir=lost+found" # every time we create a volume in ebs for mysql it will create a fole lost+found in /var/lib/mysql so we need to give this arg to delete it"
           envFrom:
             - configMapRef:
                 name: mysql-config
