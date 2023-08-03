@@ -32,7 +32,7 @@ spec:
       containers:
       - name: cart
         imagePullPolicy: Always
-        image: kiranprav/cart:v1
+        image: techworldwithsiva/cart:k8
         envFrom:
         - configMapRef:
             name: cart-config
