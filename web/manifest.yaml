@@ -107,6 +107,13 @@ spec:
       - name: web
         imagePullPolicy: Always
         image: kiranprav/web:v1
+        resources:
+          requests:
+            cpu: "150m"
+            memory: "250Mi"
+          limits:
+            cpu: "200m"
+            memory: "300Mi"
         volumeMounts:
           - name: nginx-conf
             mountPath: /etc/nginx/nginx.conf
